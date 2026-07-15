@@ -1,4 +1,4 @@
-from data_monitor.aggregator import summarize
+from data_monitor.aggregator import StockThresholds, summarize
 from data_monitor.models import Order, Sample
 from data_monitor.rendering import (
     render_orders_table,
@@ -29,7 +29,7 @@ def test_render_summary_includes_sample_and_order_counts():
 
 
 def test_render_samples_table_lists_every_sample_with_stock():
-    text = render_samples_table(SAMPLES)
+    text = render_samples_table(SAMPLES, StockThresholds())
 
     assert "S-001" in text
     assert "실리콘 웨이퍼-8인치" in text
@@ -38,8 +38,33 @@ def test_render_samples_table_lists_every_sample_with_stock():
     assert "0" in text
 
 
+def test_render_samples_table_shows_stock_classification_with_default_thresholds():
+    # S-001 stock=480 -> 부족(300<=480<1000), S-002 stock=0 -> 고갈
+    text = render_samples_table(SAMPLES, StockThresholds())
+
+    lines = text.splitlines()
+    s001_line = next(line for line in lines if "S-001" in line)
+    s002_line = next(line for line in lines if "S-002" in line)
+
+    assert "부족" in s001_line
+    assert "고갈" in s002_line
+
+
+def test_render_samples_table_reflects_custom_thresholds():
+    # 커스텀 임계값: plenty=500 이상 여유, S-001 stock=480은 그대로 부족 유지되지만
+    # shortage=500으로 올리면 부족 -> 고갈로 바뀐다.
+    thresholds = StockThresholds(plenty_threshold=1000, shortage_threshold=500)
+
+    text = render_samples_table(SAMPLES, thresholds)
+
+    lines = text.splitlines()
+    s001_line = next(line for line in lines if "S-001" in line)
+
+    assert "고갈" in s001_line
+
+
 def test_render_samples_table_handles_empty_list():
-    text = render_samples_table([])
+    text = render_samples_table([], StockThresholds())
 
     assert "없습니다" in text
 
