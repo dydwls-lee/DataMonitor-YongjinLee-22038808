@@ -1,9 +1,10 @@
 """전체 요약 집계.
 
-data-monitor 자체 요약(PRD 기능 요구사항 1)은 관리자가 데이터 저장소의
-있는 그대로의 상태를 점검하기 위한 것이므로, 통합 저장소 메인 시스템의
-"모니터링" 메뉴와 달리 REJECTED도 상태별 건수에 포함한다
-(SCHEMA.md §3, docs/HARNESS.md 참고).
+data-monitor 자체 요약(PRD.md 기능 요구사항 1)은 관리자가 데이터 저장소의
+있는 그대로의 상태를 점검하기 위한 것이므로, 통합 저장소 메인 시스템
+console-mvc의 "모니터링" 메뉴와 달리 REJECTED도 상태별 건수에 포함한다.
+이는 결정된 사항이다 (근거: 통합 저장소 docs/DECISIONS.md,
+docs/SCHEMA.md §3).
 """
 
 from __future__ import annotations
