@@ -1,4 +1,10 @@
-from data_monitor.aggregator import ORDER_STATUSES, filter_orders_by_status, summarize
+from data_monitor.aggregator import (
+    ORDER_STATUSES,
+    StockThresholds,
+    classify_stock,
+    filter_orders_by_status,
+    summarize,
+)
 from data_monitor.models import Order, Sample
 
 SAMPLES = [
@@ -66,3 +72,39 @@ def test_filter_orders_by_status_returns_empty_when_none_match():
 
 def test_filter_orders_by_status_none_returns_all_orders():
     assert filter_orders_by_status(ORDERS, None) == ORDERS
+
+
+def test_stock_thresholds_default_values():
+    thresholds = StockThresholds()
+
+    assert thresholds.plenty_threshold == 1000
+    assert thresholds.shortage_threshold == 300
+
+
+def test_classify_stock_plenty_when_at_or_above_plenty_threshold():
+    thresholds = StockThresholds()
+
+    assert classify_stock(1000, thresholds) == "여유"
+    assert classify_stock(5000, thresholds) == "여유"
+
+
+def test_classify_stock_shortage_when_between_shortage_and_plenty_threshold():
+    thresholds = StockThresholds()
+
+    assert classify_stock(300, thresholds) == "부족"
+    assert classify_stock(999, thresholds) == "부족"
+
+
+def test_classify_stock_depleted_when_below_shortage_threshold_including_zero():
+    thresholds = StockThresholds()
+
+    assert classify_stock(299, thresholds) == "고갈"
+    assert classify_stock(0, thresholds) == "고갈"
+
+
+def test_classify_stock_uses_custom_thresholds():
+    thresholds = StockThresholds(plenty_threshold=100, shortage_threshold=10)
+
+    assert classify_stock(100, thresholds) == "여유"
+    assert classify_stock(10, thresholds) == "부족"
+    assert classify_stock(9, thresholds) == "고갈"

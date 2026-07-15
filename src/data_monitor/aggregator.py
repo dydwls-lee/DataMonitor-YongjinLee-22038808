@@ -47,3 +47,38 @@ def filter_orders_by_status(orders: list[Order], status: str | None) -> list[Ord
     if status is None:
         return list(orders)
     return [order for order in orders if order.status == status]
+
+
+PLENTY_LABEL = "여유"
+SHORTAGE_LABEL = "부족"
+DEPLETED_LABEL = "고갈"
+
+
+@dataclass
+class StockThresholds:
+    """재고 상태(여유/부족/고갈) 분류에 쓰이는 절대 수량 기준 임계값.
+
+    console-mvc의 모니터링 메뉴는 주문 수요 대비 상대값으로 분류하지만,
+    이 도구는 절대 재고 수량 기준 2단계 임계값으로 판정한다
+    (근거: 통합 저장소 docs/DECISIONS.md
+    "data-monitor에 재고 여유/부족/고갈 분류 추가 여부").
+
+    콘솔 메뉴에서 실행 중 값을 바꿀 수 있도록 불변(frozen)이 아니다.
+    """
+
+    plenty_threshold: int = 1000
+    shortage_threshold: int = 300
+
+
+def classify_stock(stock: int, thresholds: StockThresholds) -> str:
+    """재고 수량을 여유/부족/고갈 3단계로 분류한다.
+
+    경계값 처리: plenty_threshold 이상 -> 여유,
+    shortage_threshold 이상 plenty_threshold 미만 -> 부족,
+    shortage_threshold 미만(0 포함) -> 고갈.
+    """
+    if stock >= thresholds.plenty_threshold:
+        return PLENTY_LABEL
+    if stock >= thresholds.shortage_threshold:
+        return SHORTAGE_LABEL
+    return DEPLETED_LABEL
