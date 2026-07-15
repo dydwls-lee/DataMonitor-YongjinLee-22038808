@@ -1,6 +1,6 @@
 # PRD — data-monitor (데이터 모니터링 Tool)
 
-상위 컨텍스트: [../../PRD.md](../../PRD.md)
+상위 컨텍스트: [../../../docs/PRD.md](../../../docs/PRD.md)
 
 ## 목적
 
@@ -8,7 +8,7 @@
 
 ## 데이터 소스
 
-`data-persistence`의 Repository(또는 동일 JSON 파일)를 읽기 전용으로 참조한다. 이 도구는 데이터를 변경하지 않는다. 조회 대상 필드는 **[../SCHEMA.md](../SCHEMA.md)** 를 따른다.
+`data-persistence`의 Repository(또는 동일 JSON 파일)를 읽기 전용으로 참조한다. 이 도구는 데이터를 변경하지 않는다. 조회 대상 필드는 **[../../../docs/SCHEMA.md](../../../docs/SCHEMA.md)** 를 따른다.
 
 ## 기능 요구사항
 
