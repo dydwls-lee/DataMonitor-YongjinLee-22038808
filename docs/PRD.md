@@ -12,7 +12,7 @@
 
 ## 기능 요구사항
 
-1. **전체 요약**: 등록 시료 수, 전체 주문 수, 상태별 주문 건수(`RESERVED`/`REJECTED`/`PRODUCING`/`CONFIRMED`/`RELEASE`)
+1. **전체 요약**: 등록 시료 수, 전체 주문 수, 상태별 주문 건수(`RESERVED`/`REJECTED`/`PRODUCING`/`CONFIRMED`/`RELEASE`) — `REJECTED` 포함은 의도된 사항이다(결정 완료, 통합 저장소 [docs/DECISIONS.md](../../../docs/DECISIONS.md) 참조). `console-mvc`의 메인 콘솔 모니터링 메뉴만 `REJECTED`를 제외한다.
 2. **시료 목록 조회**: 전체 Sample 레코드와 현재 재고를 표 형태로 출력
 3. **주문 목록 조회**: 전체 Order 레코드를 상태별 필터링하여 출력 (예: 상태 선택 후 해당 목록만 표시)
 4. **실시간 갱신**: 재조회 명령(예: 새로고침 입력) 시 파일을 다시 읽어 최신 상태 반영 — 상주 프로세스가 자동 폴링할 필요는 없으며, 사용자가 명시적으로 갱신을 트리거하는 방식으로 충분
