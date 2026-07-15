@@ -1,4 +1,4 @@
-from data_monitor.aggregator import ORDER_STATUSES, summarize
+from data_monitor.aggregator import ORDER_STATUSES, filter_orders_by_status, summarize
 from data_monitor.models import Order, Sample
 
 SAMPLES = [
@@ -50,3 +50,19 @@ def test_summarize_reports_zero_for_statuses_with_no_orders():
         "CONFIRMED": 0,
         "RELEASE": 0,
     }
+
+
+def test_filter_orders_by_status_returns_only_matching_orders():
+    confirmed = filter_orders_by_status(ORDERS, "CONFIRMED")
+
+    assert [o.order_id for o in confirmed] == ["ORD-4", "ORD-5"]
+
+
+def test_filter_orders_by_status_returns_empty_when_none_match():
+    releases = filter_orders_by_status([], "RELEASE")
+
+    assert releases == []
+
+
+def test_filter_orders_by_status_none_returns_all_orders():
+    assert filter_orders_by_status(ORDERS, None) == ORDERS

@@ -39,3 +39,10 @@ def summarize(samples: list[Sample], orders: list[Order]) -> Summary:
         total_order_count=len(orders),
         status_counts=status_counts,
     )
+
+
+def filter_orders_by_status(orders: list[Order], status: str | None) -> list[Order]:
+    """status가 None이면 전체 주문을, 아니면 해당 상태만 반환한다."""
+    if status is None:
+        return list(orders)
+    return [order for order in orders if order.status == status]
